@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>占いアプリ（オールインワンHTML）</title>
+  <style>
+  :root{
+    --bg:#0b1020; --card:#121a33; --text:#e8ecff; --muted:#aab3d6;
+    --accent:#7aa2ff; --accent2:#7dffb2; --border:rgba(255,255,255,.10);
+    --shadow:0 14px 40px rgba(0,0,0,.35); --radius:16px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:system-ui,-apple-system,"Segoe UI","Noto Sans JP",sans-serif;
+    background: radial-gradient(1200px 800px at 30% 10%, rgba(122,162,255,.25), transparent 55%),
+                radial-gradient(1000px 700px at 80% 30%, rgba(125,255,178,.12), transparent 60%),
+                var(--bg);
+    color:var(--text);
+  }
+  .header{text-align:center;padding:24px 16px}
+  .container{width:min(980px,94vw);margin:0 auto}
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;padding:10px;border:1px solid var(--border);border-radius:var(--radius)}
+  .tab{border:1px solid var(--border);background:#ffffff08;color:#fff;padding:10px 14px;border-radius:999px;cursor:pointer}
+  .tab.active{background:#7aa2ff55}
+  .panel{display:none;margin-top:14px}
+  .panel.active{display:block}
+  .card{border:1px solid var(--border);background:#121a33cc;border-radius:var(--radius);padding:18px}
+  .label{display:flex;flex-direction:column;color:var(--muted);gap:6px;font-size:13px}
+  .input,.select{padding:10px;border-radius:12px;border:1px solid var(--border);background:#ffffff08;color:#fff}
+  .btn{margin-top:12px;padding:10px 14px;border-radius:12px;border:1px solid #7aa2ff;background:#7aa2ff55;color:#fff;cursor:pointer}
+  .row{display:grid;grid-template-columns:1fr 240px;gap:12px}
+  @media(max-width:720px){.row{grid-template-columns:1fr}}
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  @media(max-width:720px){.grid{grid-template-columns:1fr}}
+  .result{margin-top:14px;border-top:1px dashed var(--border);padding-top:14px}
+  .badge{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:6px 10px;margin-right:6px;font-size:12px}
+  .footer{text-align:center;color:var(--muted);padding:20px}
+  </style>
+</head>
+<body>
+<header class="header">
+  <h1>占いアプリ</h1>
+  <p>タロット / 手相 / 星占い / 九星気学</p>
+</header>
+
+<main class="container">
+  <div class="tabs">
+    <button class="tab active" data-tab="tarot">タロット</button>
+    <button class="tab" data-tab="palm">手相</button>
+    <button class="tab" data-tab="horoscope">星占い</button>
+    <button class="tab" data-tab="kyusei">九星気学</button>
+  </div>
+
+  <section class="panel active" id="tarot">
+    <div class="card">
+      <h2>タロット占い</h2>
+      <input id="tarotQuestion" class="input" placeholder="質問（任意）"/>
+      <button class="btn" id="drawTarot">カードを引く</button>
+      <div class="result" id="tarotResult"></div>
+    </div>
+  </section>
+
+  <section class="panel" id="palm">
+    <div class="card">
+      <h2>手相占い</h2>
+      <select id="pLife" class="select"><option value="long">生命線が長い</option><option value="short">生命線が短い</option></select>
+      <button class="btn" id="readPalm">診断</button>
+      <div class="result" id="palmResult"></div>
+    </div>
+  </section>
+
+  <section class="panel" id="horoscope">
+    <div class="card">
+      <h2>星占い</h2>
+      <select id="zodiac" class="select">
+        <option>牡羊座</option><option>牡牛座</option><option>双子座</option>
+      </select>
+      <button class="btn" id="getHoroscope">占う</button>
+      <div class="result" id="horoscopeResult"></div>
+    </div>
+  </section>
+
+  <section class="panel" id="kyusei">
+    <div class="card">
+      <h2>九星気学</h2>
+      <input id="birthDate" type="date" class="input"/>
+      <button class="btn" id="calcKyusei">本命星</button>
+      <div class="result" id="kyuseiResult"></div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">© Demo</footer>
+
+<script>
+const tabs=document.querySelectorAll(".tab");
+const panels=document.querySelectorAll(".panel");
+tabs.forEach(t=>t.onclick=()=>{
+  tabs.forEach(x=>x.classList.remove("active"));
+  panels.forEach(p=>p.classList.remove("active"));
+  t.classList.add("active");
+  document.getElementById(t.dataset.tab).classList.add("active");
+});
+
+document.getElementById("drawTarot").onclick=()=>{
+  const cards=["愚者","魔術師","女教皇","太陽","世界"];
+  const c=cards[Math.floor(Math.random()*cards.length)];
+  document.getElementById("tarotResult").innerHTML="<span class='badge'>"+c+"</span>が出ました";
+};
+
+document.getElementById("readPalm").onclick=()=>{
+  document.getElementById("palmResult").textContent="堅実で安定した人生タイプです。";
+};
+
+document.getElementById("getHoroscope").onclick=()=>{
+  document.getElementById("horoscopeResult").textContent="今日は集中力が高まる日です。";
+};
+
+document.getElementById("calcKyusei").onclick=()=>{
+  document.getElementById("kyuseiResult").textContent="あなたの本命星は一白水星です。";
+};
+</script>
+</body>
+</html>
